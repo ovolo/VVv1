@@ -3,7 +3,6 @@ import { View, Button } from 'react-native';
 
 import MapboxGL from '@react-native-mapbox-gl/maps'
 
-import { lineString, featureCollection } from '@turf/helpers'
 import { CreateGridLines } from '../Helpers/MapHelpers'
 
 MapboxGL.setAccessToken('pk.eyJ1IjoibWFyay1saXNvbiIsImEiOiJja2tuMjkzNTUxeHFvMnVwZzM3OWh5N3JtIn0.0wy5pNCvpo1oSpwNzeBBZw');
@@ -29,57 +28,34 @@ class MapScreen extends Component {
     }
 
     onRegionDidChange = () => {
-        console.log('onRegionDidChange');
+        this.updateGrid();
     }
 
     onDidFinishLoadingMap = () => {
         console.log('onDidFinishLoadingMap');
     }
 
-    onDidFinishRenderingFrame = () => {
-        console.log('onDidFinishRenderingFrame');
-    }
-
     onDidFinishRenderingFrameFully = () => {
         console.log('onDidFinishRenderingFrameFully');
-    }
-
-    onDidFinishRenderingMap = () => {
-        console.log('onDidFinishRenderingMap');
-    }
-
-    onDidFinishRenderingMapFully = () => {
-        console.log('onDidFinishRenderingMapFully');
-    }
-
-    setupGrid = (style) => {
-        style.addSource(GeoJsonSource(GRID_SOURCE_ID))
-        let gridLayer = LineLayer(GRID_LAYER_ID, GRID_SOURCE_ID)
-            .withProperties(
-                //PropertyFactory.visibility(if (grid) Property.VISIBLE else Property.NONE)
-                PropertyFactory.visibility(Property.VISIBLE)
-            )
-        gridLayer.minZoom = 10
-        style.addLayer(gridLayer)
-        updateLayerColor(style, GRID_LAYER_ID, gridKey)
-        if (this.grid) {
-            updateGrid()
-        }
+        
     }
 
     updateGrid = () => {
-        const bounds = this.mapview.state.region.properties.visibleBounds;
-        const gridLines = CreateGridLines(bounds);
-        this.setState({route: gridLines});
+        const region = this.mapview.state.region;
+        if (region && region.properties.zoomLevel >= 10) {
+            console.log(region.properties.zoomLevel);
+            const bounds = this.mapview.state.region.properties.visibleBounds;
+            const gridLines = CreateGridLines(bounds);
+            this.setState({route: gridLines});
+        } else {
+            this.setState({route: null});
+        }
     }
 
     line = () => {
-
-
-
         return this.grid && this.state.route && (
             <MapboxGL.ShapeSource id='line1' shape={this.state.route}>
-                <MapboxGL.LineLayer id='linelayer1' style={{ lineColor: 'green' }} minZoomLevel='12' />
+                <MapboxGL.LineLayer id='linelayer1' style={{ lineColor: 'green' }} />
             </MapboxGL.ShapeSource>
         )
     }
@@ -98,13 +74,11 @@ class MapScreen extends Component {
                     style={{ flex: 1 }}
                     onRegionDidChange={this.onRegionDidChange}
                     onDidFinishLoadingMap={this.onDidFinishLoadingMap}
-                    onDidFinishRenderingFrame={this.onDidFinishRenderingFrame}
-                    onDidFinishRenderingFrameFully={this.onDidFinishRenderingFrameFully}
-                    onDidFinishRenderingMap={this.onDidFinishRenderingMap}
-                    onDidFinishRenderingMapFully={this.onDidFinishRenderingMapFully}>
+                    onDidFinishRenderingFrameFully={this.onDidFinishRenderingFrameFully}>
 
                     <MapboxGL.UserLocation />
-                    <MapboxGL.Camera zoomLevel={9} followUserLocation={true} />
+
+                    <MapboxGL.Camera followUserLocation={true} />
 
                     {this.line()}
                 </MapboxGL.MapView>
