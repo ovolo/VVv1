@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 
+import { CreateGridLines } from '../Helpers/MapHelpers'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 
-import { CreateGridLines } from '../Helpers/MapHelpers'
-
 MapboxGL.setAccessToken('pk.eyJ1IjoibWFyay1saXNvbiIsImEiOiJja2tuMjkzNTUxeHFvMnVwZzM3OWh5N3JtIn0.0wy5pNCvpo1oSpwNzeBBZw');
-
-const EXPLORER_ZOOM = 14.0
-const GRID_SOURCE_ID = "grid_source"
-const GRID_LAYER_ID = "grid_layer"
 
 class MapScreen extends Component {
 
@@ -24,38 +19,39 @@ class MapScreen extends Component {
     }
 
     test = () => {
+        console.log(region.properties.zoomLevel);
+        console.log(region.properties.visibleBounds);
+    }
+
+    onRegionDidChange = async () => {
         this.updateGrid();
-    }
-
-    onRegionDidChange = () => {
-        this.updateGrid();
-    }
-
-    onDidFinishLoadingMap = () => {
-        console.log('onDidFinishLoadingMap');
-    }
-
-    onDidFinishRenderingFrameFully = () => {
-        console.log('onDidFinishRenderingFrameFully');
-        
     }
 
     updateGrid = () => {
         const region = this.mapview.state.region;
+
         if (region && region.properties.zoomLevel >= 10) {
-            console.log(region.properties.zoomLevel);
-            const bounds = this.mapview.state.region.properties.visibleBounds;
+            const bounds = region.properties.visibleBounds;
             const gridLines = CreateGridLines(bounds);
+
             this.setState({route: gridLines});
         } else {
             this.setState({route: null});
         }
     }
 
-    line = () => {
+    gridLines = () => {
         return this.grid && this.state.route && (
-            <MapboxGL.ShapeSource id='line1' shape={this.state.route}>
-                <MapboxGL.LineLayer id='linelayer1' style={{ lineColor: 'green' }} />
+            <MapboxGL.ShapeSource id='gridLinesSource' shape={this.state.route}>
+                <MapboxGL.LineLayer id='gridLinesLayer' style={{ lineColor: 'green', lineWidth: 2 }} />
+            </MapboxGL.ShapeSource>
+        )
+    }
+
+    allRides = () => {
+        return this.props.route.params && this.props.route.params.allRidesJson && (
+            <MapboxGL.ShapeSource id='allRidesSource' shape={this.props.route.params.allRidesJson}>
+                <MapboxGL.LineLayer id='allRidesLayer' style={{ lineColor: 'red' }} />
             </MapboxGL.ShapeSource>
         )
     }
@@ -72,15 +68,14 @@ class MapScreen extends Component {
                 <MapboxGL.MapView 
                     ref={(ref) => { this.mapview = ref }}
                     style={{ flex: 1 }}
-                    onRegionDidChange={this.onRegionDidChange}
-                    onDidFinishLoadingMap={this.onDidFinishLoadingMap}
-                    onDidFinishRenderingFrameFully={this.onDidFinishRenderingFrameFully}>
+                    onRegionDidChange={this.onRegionDidChange}>
 
                     <MapboxGL.UserLocation />
 
                     <MapboxGL.Camera followUserLocation={true} />
 
-                    {this.line()}
+                    {this.gridLines()}
+                    {this.allRides()}
                 </MapboxGL.MapView>
             </View>
         );
