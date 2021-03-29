@@ -1,7 +1,30 @@
 import React from 'react';
-import { lineString, featureCollection } from '@turf/helpers'
+import { lineString, featureCollection, polygon, polygons } from '@turf/helpers'
 
 const EXPLORER_ZOOM = 14.0
+
+export function CreateExplorerTiles(tiles) {
+
+    let gridLines = [];
+
+    for (let tile in tiles) {
+        const bbox = this.tile2bbox(tiles[tile].x, tiles[tile].y);
+    
+        const box2 = [[
+            [bbox.west, bbox.north],
+            [bbox.east, bbox.north],
+            [bbox.east, bbox.south],
+            [bbox.west, bbox.south],
+            [bbox.west, bbox.north],
+        ]];
+
+        //const line = polygon(box2);
+
+        gridLines.push(box2);
+    };
+
+    return polygons(gridLines);        
+}
 
 export function CreateGridLines(bounds) {
     const x0 = lon2tile(bounds[1][0]);
@@ -12,19 +35,19 @@ export function CreateGridLines(bounds) {
     let gridLines = [];
     for (let x = x0 - 1; x <= x1 + 1; x++) {
         for (let y = y0 - 1; y <= y1 + 1; y++) {
-            const bbox = this.tile2bbox(x, y)
+            const bbox = this.tile2bbox(x, y);
 
             const myCoords = [
                 [bbox.west, bbox.south],
                 [bbox.west, bbox.north],
                 [bbox.east, bbox.north]
-            ]
+            ];
 
             const line = lineString(myCoords);
 
             gridLines.push(line);
-        }
-    }
+        };
+    };
 
     return featureCollection(gridLines);        
 }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Button } from 'react-native';
 
-import { CreateGridLines } from '../Helpers/MapHelpers'
+import { CreateExplorerTiles, CreateGridLines } from '../Helpers/MapHelpers'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 
 MapboxGL.setAccessToken('pk.eyJ1IjoibWFyay1saXNvbiIsImEiOiJja2tuMjkzNTUxeHFvMnVwZzM3OWh5N3JtIn0.0wy5pNCvpo1oSpwNzeBBZw');
@@ -56,6 +56,38 @@ class MapScreen extends Component {
         )
     }
 
+    tiles = () => {
+
+        let result = null;
+        if (this.props.route.params && this.props.route.params.explorerTiles) {
+          //  console.log('explorerTiles', this.props.route.params.explorerTiles);
+
+            const data = this.props.route.params.explorerTiles;
+
+            result = CreateExplorerTiles(data);
+
+        }
+
+        console.log(result);
+
+        return result && this.props.route.params && this.props.route.params.explorerTiles && (
+            <MapboxGL.ShapeSource id='explorerTilesSource' shape={result}>
+                <MapboxGL.FillLayer id='explorerTilesLayer' style={{ fillColor: 'yellow', fillOpacity: 0.25, fillOutlineColor: 'black' }} />
+            </MapboxGL.ShapeSource>
+        )
+    }
+
+    //8008-5381:
+    //br: {x: -4.02099609375, y: 52.40241887397332}
+    //clumped: false
+    //count: 1
+    //deleted: false
+    //size: 2
+    //tl: {x: -4.04296875, y: 52.415822612378776}
+    //x: 8008
+    //y: 5381
+    //z: 14
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -76,6 +108,7 @@ class MapScreen extends Component {
 
                     {this.gridLines()}
                     {this.allRides()}
+                    {this.tiles()}
                 </MapboxGL.MapView>
             </View>
         );
