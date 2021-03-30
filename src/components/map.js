@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Button } from 'react-native';
 
-import { CreateExplorerTiles, CreateGridLines } from '../Helpers/MapHelpers'
+import { CreateExplorerTiles, CreateGridLines } from '../helpers/mapHelpers'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 
 import { useSelector, useDispatch } from 'react-redux'
