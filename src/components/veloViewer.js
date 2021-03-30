@@ -41,6 +41,7 @@ class VeloViewerScreen extends Component {
 
 
         setTimeout(() => {
+            console.log(this.webview);
             this.webview.injectJavaScript(getData);
         }, 5000);
 

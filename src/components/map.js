@@ -1,68 +1,70 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { View, Button } from 'react-native';
 
 import { CreateExplorerTiles, CreateGridLines } from '../Helpers/MapHelpers'
 import MapboxGL from '@react-native-mapbox-gl/maps'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { addnote, deletenote } from '../redux/notesApp'
+
 MapboxGL.setAccessToken('pk.eyJ1IjoibWFyay1saXNvbiIsImEiOiJja2tuMjkzNTUxeHFvMnVwZzM3OWh5N3JtIn0.0wy5pNCvpo1oSpwNzeBBZw');
 
-class MapScreen extends Component {
+function MapScreen(props) {
 
-    mapview = null;
-    grid = true;
+    const notes = useSelector(state => state)
+    const dispatch = useDispatch()
+    const addNote = note => dispatch(addnote(note))
+    const deleteNote = id => dispatch(deletenote(id))
 
-    constructor() {
-        super();
-        this.state = {
-            route: null
-        }
-    }
+    let mapview = null;
+    let grid = true;
 
-    test = () => {
+    const [route, setRoute] = useState(null);
+
+    function test() {
         console.log(region.properties.zoomLevel);
         console.log(region.properties.visibleBounds);
     }
 
-    onRegionDidChange = async () => {
-        this.updateGrid();
+    function onRegionDidChange() {
+        updateGrid();
     }
 
-    updateGrid = () => {
-        const region = this.mapview.state.region;
-
+    function updateGrid() {
+        const region = mapview.state.region;
         if (region && region.properties.zoomLevel >= 10) {
             const bounds = region.properties.visibleBounds;
             const gridLines = CreateGridLines(bounds);
 
-            this.setState({route: gridLines});
+            setRoute(gridLines);
         } else {
-            this.setState({route: null});
+            setRoute(null);
         }
     }
 
-    gridLines = () => {
-        return this.grid && this.state.route && (
-            <MapboxGL.ShapeSource id='gridLinesSource' shape={this.state.route}>
+    function gridLines() {
+        return grid && route && (
+            <MapboxGL.ShapeSource id='gridLinesSource' shape={route}>
                 <MapboxGL.LineLayer id='gridLinesLayer' style={{ lineColor: 'green', lineWidth: 2 }} />
             </MapboxGL.ShapeSource>
         )
     }
 
-    allRides = () => {
-        return this.props.route.params && this.props.route.params.allRidesJson && (
-            <MapboxGL.ShapeSource id='allRidesSource' shape={this.props.route.params.allRidesJson}>
+    function allRides() {
+        return props.route.params && props.route.params.allRidesJson && (
+            <MapboxGL.ShapeSource id='allRidesSource' shape={props.route.params.allRidesJson}>
                 <MapboxGL.LineLayer id='allRidesLayer' style={{ lineColor: 'red' }} />
             </MapboxGL.ShapeSource>
         )
     }
 
-    tiles = () => {
+    function tiles() {
 
         let result = null;
-        if (this.props.route.params && this.props.route.params.explorerTiles) {
+        if (props.route.params && props.route.params.explorerTiles) {
           //  console.log('explorerTiles', this.props.route.params.explorerTiles);
 
-            const data = this.props.route.params.explorerTiles;
+            const data = props.route.params.explorerTiles;
 
             result = CreateExplorerTiles(data);
 
@@ -70,49 +72,37 @@ class MapScreen extends Component {
 
         console.log(result);
 
-        return result && this.props.route.params && this.props.route.params.explorerTiles && (
+        return result && props.route.params && props.route.params.explorerTiles && (
             <MapboxGL.ShapeSource id='explorerTilesSource' shape={result}>
                 <MapboxGL.FillLayer id='explorerTilesLayer' style={{ fillColor: 'yellow', fillOpacity: 0.25, fillOutlineColor: 'black' }} />
             </MapboxGL.ShapeSource>
         )
     }
 
-    //8008-5381:
-    //br: {x: -4.02099609375, y: 52.40241887397332}
-    //clumped: false
-    //count: 1
-    //deleted: false
-    //size: 2
-    //tl: {x: -4.04296875, y: 52.415822612378776}
-    //x: 8008
-    //y: 5381
-    //z: 14
-
-    render() {
         return (
             <View style={{ flex: 1 }}>
                 <View style={{ height: 50 }}>
                     <Button 
-                        onPress={this.test}
+                        onPress={test}
                         title="Test" />
                 </View>
 
                 <MapboxGL.MapView 
-                    ref={(ref) => { this.mapview = ref }}
+                    ref={(ref) => { mapview = ref }}
                     style={{ flex: 1 }}
-                    onRegionDidChange={this.onRegionDidChange}>
+                    onRegionDidChange={onRegionDidChange}>
 
                     <MapboxGL.UserLocation />
 
                     <MapboxGL.Camera followUserLocation={true} />
 
-                    {this.gridLines()}
-                    {this.allRides()}
-                    {this.tiles()}
+                    {gridLines()}
+                    {allRides()}
+                    {tiles()}
                 </MapboxGL.MapView>
             </View>
         );
-    }
+    
 }
 
 export default MapScreen;
