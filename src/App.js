@@ -1,7 +1,8 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
+import { enableScreens } from 'react-native-screens';
 
 import { Provider } from 'react-redux'
 
@@ -21,6 +22,8 @@ function Settings() {
     );
 }
 
+enableScreens(true);
+
 const Tab = createBottomTabNavigator();
 
 function MyTabs() {
@@ -28,7 +31,7 @@ function MyTabs() {
         <Tab.Navigator>
             <Tab.Screen name="Map" component={Map} />
             <Tab.Screen name="VV" component={VeloViewer} />
-            <Tab.Screen name="Settings2e" component={Settings} />
+            <Tab.Screen name="Settings" component={Settings} />
         </Tab.Navigator>
     );
 }

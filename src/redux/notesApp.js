@@ -1,51 +1,38 @@
 // Action Types
 
-export const ADD_NOTE = 'ADD_NOTE'
-export const DELETE_NOTE = 'DELETE_NOTE'
+export const APPLY_VELO_VIEWER_DATA = 'APPLY_VELO_VIEWER_DATA'
 
 // Action Creators
 
-let noteID = 0
-
-export function addnote(note) {
+export function applyveloviewerdata(id) {
   return {
-    type: ADD_NOTE,
-    id: noteID++,
-    note
-  }
-}
-
-export function deletenote(id) {
-  return {
-    type: DELETE_NOTE,
+    type: APPLY_VELO_VIEWER_DATA,
     payload: id
   }
 }
 
 // reducer
 
-const initialState = []
+const initialState = {
+    veloViewerData: {},
+    mapSettings: {
+        showGrid: true,
+        showAllRides: true,
+        showExplorerTiles: true
+    }
+}
 
-function notesReducer(state = initialState, action) {
+function reducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_NOTE:
-      return [
+    case APPLY_VELO_VIEWER_DATA:
+      return {
         ...state,
-        {
-          id: action.id,
-          note: action.note
-        }
-      ]
-
-    case DELETE_NOTE:
-      const deletedNewArray = remove(state, obj => {
-        return obj.id != action.payload
-      })
-      return deletedNewArray
+        veloViewerData: action.payload
+      }
 
     default:
       return state
   }
 }
 
-export default notesReducer
+export default reducer
