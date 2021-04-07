@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { View } from 'react-native';
+import { useSelector } from 'react-redux'
 
 import { CreateExplorerTiles, CreateGridLines } from '../helpers/mapHelpers'
 import MapboxGL from '@react-native-mapbox-gl/maps'
-
-import { useSelector } from 'react-redux'
 
 MapboxGL.setAccessToken('pk.eyJ1IjoibWFyay1saXNvbiIsImEiOiJja2tuMjkzNTUxeHFvMnVwZzM3OWh5N3JtIn0.0wy5pNCvpo1oSpwNzeBBZw');
 

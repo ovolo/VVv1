@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import { View, Text } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 
-import { Provider } from 'react-redux'
+import { Provider as StoreProvider } from 'react-redux'
+import { Provider as PaperProvider } from 'react-native-paper';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -13,14 +13,7 @@ import store from './redux/store'
 
 import Map from './components/map'
 import VeloViewer from './components/veloViewer'
-
-function Settings() {
-    return (        
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Settings*</Text>
-        </View>        
-    );
-}
+import Settings from './components/settings'
 
 enableScreens(true);
 
@@ -38,11 +31,13 @@ function MyTabs() {
 
 const App: () => React$Node = () => {
     return (
-        <Provider store={store}>
-            <NavigationContainer>            
-                <MyTabs />            
-            </NavigationContainer>
-        </Provider>
+        <StoreProvider store={store}>
+            <PaperProvider>
+                <NavigationContainer>            
+                    <MyTabs />            
+                </NavigationContainer>
+            </PaperProvider>
+        </StoreProvider>
     );
 };
 

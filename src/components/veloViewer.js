@@ -5,7 +5,7 @@ import { WebView } from 'react-native-webview';
 import CookieManager from "@react-native-community/cookies";
 
 import { useDispatch } from 'react-redux'
-import { applyveloviewerdata } from '../redux/notesApp'
+import { setVeloViewerData } from '../redux'
 
 function VeloViewer(props) {
     const getData = `
@@ -29,13 +29,7 @@ function VeloViewer(props) {
     const refWebView = useRef();
 
     const dispatch = useDispatch();
-    const applyVeloViewerData = data => dispatch(applyveloviewerdata(data));
-
-    function handleLoadEnd() {
-        const { current } = refWebView;
-        console.log('current', current);
-        current.injectJavaScript(getData);
-    }
+    const veloViewerData = data => dispatch(setVeloViewerData(data));
 
     function handleWebViewNavigationStateChange(newNavState) {
         CookieManager.getAll(true).then((cookies) => {
@@ -64,7 +58,7 @@ function VeloViewer(props) {
             }
         });
 
-        const { url, loading } = newNavState;        
+        const { url, loading } = newNavState;
         if (!url || loading) {
             return; 
         }
@@ -77,7 +71,7 @@ function VeloViewer(props) {
         const data = JSON.parse(message.nativeEvent.data);
 
         if (data.explorerTiles) {
-            applyVeloViewerData(data);  
+            veloViewerData(data); 
             props.navigation.navigate('Map');
         }
     }       
