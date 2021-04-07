@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Button } from 'react-native';
+import React, { useRef } from 'react';
+import { View } from 'react-native';
 
 import { WebView } from 'react-native-webview';
 import CookieManager from "@react-native-community/cookies";
@@ -9,8 +9,9 @@ import { applyveloviewerdata } from '../redux/notesApp'
 
 function VeloViewer(props) {
     const getData = `
-        document.getElementById('viewMapCheckBox').click();
-        document.getElementById('viewMapCheckBox').click();
+        if (!viewMapCheckBox.classList.contains('active')) {
+            viewMapCheckBox.click();
+        }
 
         var collection = { "type": "FeatureCollection", "features": [] };
         liveData.forEach( function(d, i) { if (d.ll != null) collection.features.push(d.ll.toGeoJSON()); } );
@@ -23,44 +24,70 @@ function VeloViewer(props) {
         body.maxSquares = window.explorerMaxs;
 
         window.ReactNativeWebView.postMessage(JSON.stringify(body));     
-        true;` 
-
+        true;`;
 
     const refWebView = useRef();
 
-    const dispatch = useDispatch()
-    const applyVeloViewerData = id => dispatch(applyveloviewerdata(id))
+    const dispatch = useDispatch();
+    const applyVeloViewerData = data => dispatch(applyveloviewerdata(data));
 
-    handleLoadEnd = (event) => {
+    function handleLoadEnd() {
+        const { current } = refWebView;
+        console.log('current', current);
+        current.injectJavaScript(getData);
     }
 
-    handleMessage = (event) => {
-        applyVeloViewerData(JSON.parse(event.nativeEvent.data));
-        
-        props.navigation.navigate('Map');
-    }     
+    function handleWebViewNavigationStateChange(newNavState) {
+        CookieManager.getAll(true).then((cookies) => {
+            const explorerMaxSquareShown = cookies['ExplorerMaxSquareShown'];
+            if (!explorerMaxSquareShown || explorerMaxSquareShown.value != '1') {
+                CookieManager.set('https://veloviewer.com', {
+                    name: 'ExplorerMaxSquareShown',
+                    value: '1',
+                    domain: '.veloviewer.com',
+                    path: '/',
+                    version: '1',
+                    expiration: '2022-01-01T00:00:00.00-00:00'
+                }, true);    
+            }
 
-    CookieManager.set('https://veloviewer.com', {
-        name: 'ExplorerMaxSquareShown',
-        value: '1',
-        domain: '.veloviewer.com',
-        path: '/',
-        version: '1',
-        expiration: '2100-01-01T12:30:00.00-05:00'
-    });
+            const explorerClusterShown = cookies['ExplorerClusterShown'];
+            if (!explorerClusterShown || explorerClusterShown.value != '1') {
+                CookieManager.set('https://veloviewer.com', {
+                    name: 'ExplorerClusterShown',
+                    value: '1',
+                    domain: '.veloviewer.com',
+                    path: '/',
+                    version: '1',
+                    expiration: '2022-01-01T00:00:00.00-00:00'
+                }, true);
+            }
+        });
 
-    setTimeout(() => {
+        const { url, loading } = newNavState;        
+        if (!url || loading) {
+            return; 
+        }
+
         const { current } = refWebView;
-        console.log(current);
         current.injectJavaScript(getData);
-    }, 5000);
+    }
+
+    function handleWebViewMessage(message) {
+        const data = JSON.parse(message.nativeEvent.data);
+
+        if (data.explorerTiles) {
+            applyVeloViewerData(data);  
+            props.navigation.navigate('Map');
+        }
+    }       
 
     return (
         <View style={{ flex: 1 }}>
             <WebView ref={refWebView}
                 source={{ uri: 'https://veloviewer.com/activities' }}
-                onLoadEnd={handleLoadEnd}
-                onMessage={handleMessage} />
+                onNavigationStateChange={handleWebViewNavigationStateChange}
+                onMessage={handleWebViewMessage} />
         </View>
     );    
 }

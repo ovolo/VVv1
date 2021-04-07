@@ -240,7 +240,7 @@ PODS:
     - React-cxxreact (= 0.63.4)
     - React-jsi (= 0.63.4)
   - React-jsinspector (0.63.4)
-  - react-native-cookies (5.0.1):
+  - react-native-cookies (6.0.6):
     - React-Core
   - react-native-mapbox-gl (8.1.0):
     - "@react-native-mapbox-gl-mapbox-static (~> 5.9.0)"
@@ -372,7 +372,7 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
-  - "react-native-cookies (from `../node_modules/@react-native-community/cookies`)"
+  - "react-native-cookies (from `../node_modules/@react-native-cookies/cookies`)"
   - "react-native-mapbox-gl (from `../node_modules/@react-native-mapbox-gl/maps`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -442,7 +442,7 @@ EXTERNAL SOURCES:
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-cookies:
-    :path: "../node_modules/@react-native-community/cookies"
+    :path: "../node_modules/@react-native-cookies/cookies"
   react-native-mapbox-gl:
     :path: "../node_modules/@react-native-mapbox-gl/maps"
   react-native-safe-area-context:
@@ -510,7 +510,7 @@ SPEC CHECKSUMS:
   React-jsi: a0418934cf48f25b485631deb27c64dc40fb4c31
   React-jsiexecutor: 93bd528844ad21dc07aab1c67cb10abae6df6949
   React-jsinspector: 58aef7155bc9a9683f5b60b35eccea8722a4f53a
-  react-native-cookies: ce50e42ace7cf0dd47769260ca5bbe8eee607e4e
+  react-native-cookies: ef09efc368350ff6e687d048c613af26dbe4be4e
   react-native-mapbox-gl: eec7e5be5b874cfceb79fcfe24d595411015153a
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-webview: a4751ec8f0a6a397026f22ed54c1efeec4540555

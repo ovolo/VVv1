@@ -4,17 +4,23 @@ export const APPLY_VELO_VIEWER_DATA = 'APPLY_VELO_VIEWER_DATA'
 
 // Action Creators
 
-export function applyveloviewerdata(id) {
+export function applyveloviewerdata(data) {
   return {
     type: APPLY_VELO_VIEWER_DATA,
-    payload: id
+    payload: data
   }
 }
 
 // reducer
 
 const initialState = {
-    veloViewerData: {},
+    veloViewerData: {
+        ridesCount: 0,
+        allRidesJson: undefined,
+        explorerTiles: undefined,
+        maxClump: undefined,
+        maxSquares: undefined
+    },
     mapSettings: {
         showGrid: true,
         showAllRides: true,
