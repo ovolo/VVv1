@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
-    Colors,
     Appbar,
+    Colors,
+    Divider,
     FAB,
     Switch,
     Paragraph,
@@ -26,10 +27,12 @@ function Settings() {
                 <Paragraph>Show Grid</Paragraph>
                 <Switch value={mapSettings.showGrid} onValueChange={mapSettingShowGrid} />
             </View>
+            <Divider />
             <View style={styles.row}>
                 <Paragraph>Show All Rides</Paragraph>
                 <Switch value={mapSettings.showAllRides} onValueChange={mapSettingShowAllRides} />
             </View>
+            <Divider />
             <View style={styles.row}>
                 <Paragraph>Show Explorer Tiles</Paragraph>
                 <Switch value={mapSettings.showExplorerTiles} onValueChange={mapSettingShowExplorerTiles} />
@@ -43,7 +46,6 @@ export default Settings;
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: Colors.white,
       paddingVertical: 8,
     },
     row: {

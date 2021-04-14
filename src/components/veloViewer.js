@@ -2,28 +2,31 @@ import React, { useRef } from 'react';
 import { View } from 'react-native';
 
 import { WebView } from 'react-native-webview';
-import CookieManager from "@react-native-community/cookies";
+import CookieManager from "@react-native-cookies/cookies";
 
 import { useDispatch } from 'react-redux'
 import { setVeloViewerData } from '../redux'
 
 function VeloViewer(props) {
     const getData = `
-        if (!viewMapCheckBox.classList.contains('active')) {
-            viewMapCheckBox.click();
+        if (viewMapCheckBox) {
+            if (!viewMapCheckBox.classList.contains('active')) {
+                viewMapCheckBox.click();
+            }
+
+            var collection = { "type": "FeatureCollection", "features": [] };
+            liveData.forEach( function(d, i) { if (d.ll != null) collection.features.push(d.ll.toGeoJSON()); } );
+
+            var body = {};
+            body.ridesCount = collection.features.length;
+            body.allRidesJson = collection;
+            body.explorerTiles = window.explorerTiles;
+            body.maxClump = window.maxClump;
+            body.maxSquares = window.explorerMaxs;
+
+            window.ReactNativeWebView.postMessage(JSON.stringify(body));
         }
 
-        var collection = { "type": "FeatureCollection", "features": [] };
-        liveData.forEach( function(d, i) { if (d.ll != null) collection.features.push(d.ll.toGeoJSON()); } );
-
-        var body = {};
-        body.ridesCount = collection.features.length;
-        body.allRidesJson = collection;
-        body.explorerTiles = window.explorerTiles;
-        body.maxClump = window.maxClump;
-        body.maxSquares = window.explorerMaxs;
-
-        window.ReactNativeWebView.postMessage(JSON.stringify(body));     
         true;`;
 
     const refWebView = useRef();
