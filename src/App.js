@@ -8,7 +8,7 @@ import { Provider as PaperProvider } from 'react-native-paper';
 
 import store from './redux/store'
 
-import AppNavigator from './navigation/appNavigator'
+import RootNavigator from './navigation/rootNavigator'
 
 enableScreens(true);
 
@@ -16,7 +16,7 @@ const App: () => React$Node = () => {
     return (
         <StoreProvider store={store}>
             <PaperProvider>
-                <AppNavigator/>
+                <RootNavigator/>
             </PaperProvider>
         </StoreProvider>
     );

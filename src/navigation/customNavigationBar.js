@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Appbar, Menu } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 
 function CustomNavigationBar({ navigation, previous, scene }) {
     const { options } = scene.descriptor;
@@ -10,20 +10,14 @@ function CustomNavigationBar({ navigation, previous, scene }) {
         ? options.title
         : scene.route.name;
 
-    const [visible, setVisible] = useState(false);
-    const openMenu = () => setVisible(true);
-    const closeMenu = () => setVisible(false);
-
     return (
         <Appbar.Header>
-            {previous ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+            {previous ? ( 
+                <Appbar.BackAction onPress={navigation.goBack} /> 
+            ) : (
+                <Appbar.Action icon="cog" color="white" onPress={() => {navigation.openDrawer();}} /> 
+            )}
             <Appbar.Content title={title} />
-            {!previous ? (
-                <Menu visible={visible} onDismiss={closeMenu} anchor={<Appbar.Action icon="menu" color="white" onPress={openMenu} />}>
-                    <Menu.Item onPress={() => {closeMenu(); navigation.navigate('VV')}} title="VV" />
-                    <Menu.Item onPress={() => {closeMenu(); navigation.navigate('Settings')}} title="Settings" />
-                </Menu>
-            ) : null}
         </Appbar.Header>
     );
 }
