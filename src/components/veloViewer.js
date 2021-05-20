@@ -77,7 +77,7 @@ function VeloViewer(props) {
             veloViewerData(data); 
             props.navigation.navigate('Map');
         }
-    }       
+    }
 
     return (
         <View style={{ flex: 1 }}>
@@ -86,7 +86,7 @@ function VeloViewer(props) {
                 onNavigationStateChange={handleWebViewNavigationStateChange}
                 onMessage={handleWebViewMessage} />
         </View>
-    );    
+    );
 }
 
 export default VeloViewer;

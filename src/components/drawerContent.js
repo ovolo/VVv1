@@ -27,7 +27,7 @@ import {
     setMapSettingShowExplorerTiles
 } from '../redux'
 
-function Settings({navigation}) {
+function DrawerContent({navigation}) {
     const mapSettings = useSelector(state => state.mapSettings);
 
     const dispatch = useDispatch();
@@ -44,9 +44,17 @@ function Settings({navigation}) {
 
                 <Drawer.Section style={styles.drawerSection}>
                     <Drawer.Item
-                        icon="refresh"
-                        label="Refresh Velo Viewer Data"
+                        icon='refresh'
+                        label='Refresh Velo Viewer Data'
                         onPress={() => {navigation.navigate('VV');}}
+                    />
+                </Drawer.Section>
+
+                <Drawer.Section style={styles.drawerSection}>
+                    <Drawer.Item
+                        icon='map'
+                        label={'Map Style - ' + mapSettings.mapStyle.name}
+                        onPress={() => {navigation.navigate('MapStyle');}}
                     />
                 </Drawer.Section>
 
@@ -69,7 +77,7 @@ function Settings({navigation}) {
     );
 }
 
-export default Settings;
+export default DrawerContent;
 
 const styles = StyleSheet.create({
     drawerContent: {
@@ -92,14 +100,14 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16,
     },
     bottom: {
-      position: 'absolute',
-      left: 0,
-      right: 0,
-      bottom: 0,
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        bottom: 0,
     },
     fab: {
-      position: 'absolute',
-      right: 16,
-      bottom: 28,
+        position: 'absolute',
+        right: 16,
+        bottom: 28,
     },
   });

@@ -57,6 +57,7 @@ function Map(props) {
             <MapboxGL.MapView 
                 ref={refMapView}
                 style={{ flex: 1 }}
+                styleURL={mapSettings.mapStyle.styleUrl}
                 onRegionDidChange={handleRegionDidChange}>
 
                 <MapboxGL.UserLocation />
